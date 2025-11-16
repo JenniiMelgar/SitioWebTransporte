@@ -23,5 +23,4 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime'
     ];
 
-    // QUITAR cualquier mutador de password
 }

@@ -12,12 +12,12 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // Registrar nuestro middleware personalizado para roles
+        // Middleware personalizado para roles
         $middleware->alias([
             'role' => CheckRole::class,
         ]);
 
-        // Grupo de middleware 'web' (ya viene configurado, pero lo mostramos por claridad)
+        // Grupo de middleware 'web' 
         $middleware->group('web', [
             \Illuminate\Cookie\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
