@@ -31,6 +31,20 @@ return [
 
     'connections' => [
 
+        'oracle' => [
+            'driver' => 'oracle',
+            'tns' => '',
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '1521'),
+            'database' => env('DB_DATABASE', 'xepdb1'),
+            'service_name'   => env('DB_SERVICE_NAME', 'xepdb1'),
+            'username' => env('DB_USERNAME', 'DTW'),
+            'password' => env('DB_PASSWORD', 'transito'),
+            'charset' => 'AL32UTF8',
+            'prefix' => '',
+            'prefix_schema' => '',
+        ],
+
         'sqlite' => [
             'driver' => 'sqlite',
             'url' => env('DB_URL'),
@@ -112,6 +126,7 @@ return [
             // 'encrypt' => env('DB_ENCRYPT', 'yes'),
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
+        
 
     ],
 

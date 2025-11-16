@@ -1,7 +1,78 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ETLController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AnalistaController;
+use App\Http\Controllers\InvitadoController;
 use Illuminate\Support\Facades\Route;
 
+// Página de inicio pública -> Login
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/login');
+});
+
+// Rutas de autenticación
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// Nuevas rutas para el dashboard optimizado
+Route::middleware(['auth'])->group(function () {
+    // Métricas del dashboard
+    Route::get('/dashboard-metrics', [DashboardController::class, 'getDashboardMetrics']);
+    Route::get('/chart-data', [DashboardController::class, 'getChartData']);
+    Route::post('/datos-filtrados', [DashboardController::class, 'getDatosFiltrados'])->name('datos.filtrados');
+    Route::get('/estadisticas-avanzadas', [DashboardController::class, 'getEstadisticasAvanzadas']);
+    Route::get('/map-data', [DashboardController::class, 'getMapData'])->name('map.data');
+    Route::post('/map-data-filtrado', [DashboardController::class, 'getMapDataFiltrado'])->name('map.data.filtrado');
+});
+
+// Rutas protegidas por autenticación
+Route::middleware(['auth'])->group(function () {
+   
+    // Dashboard principal (redirige según rol)
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+   
+    // DASHBOARD ESPECÍFICOS POR ROL
+    Route::middleware(['role:Administrador'])->prefix('admin')->group(function () {
+        Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+        Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
+        Route::get('/system', [AdminController::class, 'system'])->name('admin.system');
+    });
+   
+    Route::middleware(['role:Analista'])->prefix('analista')->group(function () {
+        Route::get('/dashboard', [AnalistaController::class, 'dashboard'])->name('analista.dashboard');
+    });
+   
+    Route::middleware(['role:Invitado'])->prefix('invitado')->group(function () {
+        Route::get('/dashboard', [InvitadoController::class, 'dashboard'])->name('invitado.dashboard');
+    });
+
+    // REPORTES - Solo Analistas y Administradores
+    Route::middleware(['role:Analista,Administrador'])->group(function () {
+        Route::get('/reportes', function () {
+            return view('reportes');
+        })->name('reportes');
+    });
+   
+    // CARGA DE ARCHIVOS - Solo Administradores
+    Route::middleware(['role:Administrador'])->group(function () {
+        Route::get('/carga', function () {
+            return view('carga');
+        })->name('carga');
+    });
+   
+    // ETL - Solo Analistas y Administradores
+    Route::middleware(['role:Analista,Administrador'])->group(function () {
+        Route::get('/etl', [ETLController::class, 'index'])->name('etl');
+        Route::post('/etl/execute', [ETLController::class, 'executeETL'])->name('etl.execute');
+        Route::get('/etl/logs', [ETLController::class, 'getLogs'])->name('etl.logs');
+    });
+   
+    // API endpoints
+    Route::get('/kpis', [DashboardController::class, 'getKPIs']);
+    Route::post('/datos-filtrados', [DashboardController::class, 'getDatosFiltrados']);
+    Route::get('/estadisticas-avanzadas', [DashboardController::class, 'getEstadisticasAvanzadas']);
 });
