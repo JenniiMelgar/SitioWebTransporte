@@ -36,13 +36,6 @@ class AdminController extends Controller
                 'roleBadgeColor' => 'warning',
                 'kpis' => [
                     [
-                        'icon' => 'fas fa-users',
-                        'value' => number_format($metric->total_usuarios ?? 0),
-                        'label' => 'Usuarios Registrados',
-                        'bgClass' => 'bg-primary',
-                        'textClass' => 'text-white'
-                    ],
-                    [
                         'icon' => 'fas fa-car-crash',
                         'value' => number_format($metric->total_accidentes ?? 0),
                         'label' => 'Total Accidentes',
@@ -55,6 +48,13 @@ class AdminController extends Controller
                         'value' => round($metric->severidad_promedio ?? 0, 1),
                         'label' => 'Severidad Promedio',
                         'bgClass' => 'bg-info',
+                        'textClass' => 'text-white'
+                    ],
+                    [
+                        'icon' => 'fas fa-users',
+                        'value' => number_format($metric->total_usuarios ?? 0),
+                        'label' => 'Usuarios Registrados',
+                        'bgClass' => 'bg-primary',
                         'textClass' => 'text-white'
                     ],
                     [

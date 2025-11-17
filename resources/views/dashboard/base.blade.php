@@ -248,22 +248,19 @@
                                     <option value="4">Nivel 4 - Impacto Severo</option>
                                 </select>
                             </div>
-                        
                             <div class="mb-3">
                                 <label class="form-label">Condiciones Climáticas</label>
                                 <select class="form-select" id="filtro-clima">
                                     <option value="">Todas las condiciones</option>
-                                    <option value="Clear">Despejado</option>
-                                    <option value="Rain">Lluvia</option>
-                                    <option value="Snow">Nieve</option>
-                                    <option value="Fog">Niebla</option>
-                                    <option value="Cloudy">Nublado</option>
-                                    <option value="Overcast">Cubierto</option>
-                                    <option value="Haze">Bruma</option>
-                                    <option value="Heavy Rain">Lluvia Intensa</option>
-                                    <option value="Light Rain">Lluvia Ligera</option>
-                                    <option value="Heavy Snow">Nieve Intensa</option>
-                                    <option value="Light Snow">Nieve Ligera</option>
+                                    <option value="Despejado">Despejado (Fair/Clear)</option>
+                                    <option value="Lluvia">Lluvia</option>
+                                    <option value="Nieve">Nieve</option>
+                                    <option value="Niebla">Niebla</option>
+                                    <option value="Nublado">Nublado</option>
+                                    <option value="Tormenta">Tormenta</option>
+                                    <option value="Llovizna">Llovizna</option>
+                                    <option value="Bruma">Bruma</option>
+                                    <option value="Ventoso">Ventoso</option>
                                 </select>
                             </div>
 
@@ -271,13 +268,12 @@
                                 <label class="form-label">Momento del Día</label>
                                 <select class="form-select" id="filtro-luz">
                                     <option value="">Todos los momentos</option>
-                                    <option value="Day">Día</option>
-                                    <option value="Night">Noche</option>
-                                    <option value="Dawn">Amanecer</option>
-                                    <option value="Dusk">Atardecer</option>
+                                    <option value="Día">Día</option>
+                                    <option value="Noche">Noche</option>
+                                    <!-- No incluir Amanecer/Atardecer ya que no hay datos -->
                                 </select>
                             </div>
-                        </div> 
+                        </div>
                     
                         <div class="d-grid gap-2">
                             <button type="button" class="btn btn-primary" onclick="applyFilters()">

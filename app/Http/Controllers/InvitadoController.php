@@ -27,16 +27,6 @@ class InvitadoController extends Controller
                 'roleBadgeColor' => 'secondary',
                 'kpis' => [
                     [
-                        'icon' => 'fas fa-car-crash',
-                        'value' => number_format($metrics->total_accidentes ?? 0),
-                        'label' => 'Total de Accidentes'
-                    ],
-                    [
-                        'icon' => 'fas fa-exclamation-triangle',
-                        'value' => round($metrics->severidad_promedio ?? 0, 1),
-                        'label' => 'Severidad Promedio'
-                    ],
-                    [
                         'icon' => 'fas fa-database',
                         'value' => 'Oracle',
                         'label' => 'Base de Datos'

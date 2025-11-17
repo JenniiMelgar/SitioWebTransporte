@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ETLController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AnalistaController;
+use App\Http\Controllers\CargaController;
 use App\Http\Controllers\InvitadoController;
 use Illuminate\Support\Facades\Route;
 
@@ -41,6 +42,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
         Route::get('/system', [AdminController::class, 'system'])->name('admin.system');
     });
+
    
     Route::middleware(['role:Analista'])->prefix('analista')->group(function () {
         Route::get('/dashboard', [AnalistaController::class, 'dashboard'])->name('analista.dashboard');
@@ -57,11 +59,11 @@ Route::middleware(['auth'])->group(function () {
         })->name('reportes');
     });
    
-    // CARGA DE ARCHIVOS - Solo Administradores
+    // CARGA DE ARCHIVOS - Solo Administradores (ACTUALIZADO)
     Route::middleware(['role:Administrador'])->group(function () {
-        Route::get('/carga', function () {
-            return view('carga');
-        })->name('carga');
+        Route::get('/carga', [CargaController::class, 'index'])->name('carga'); // CAMBIADO
+        Route::post('/carga/upload', [CargaController::class, 'upload'])->name('carga.upload');
+        Route::get('/carga/history', [CargaController::class, 'getUploadHistory'])->name('carga.history');
     });
    
     // ETL - Solo Analistas y Administradores
@@ -75,4 +77,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/kpis', [DashboardController::class, 'getKPIs']);
     Route::post('/datos-filtrados', [DashboardController::class, 'getDatosFiltrados']);
     Route::get('/estadisticas-avanzadas', [DashboardController::class, 'getEstadisticasAvanzadas']);
+
+    // Rutas para comparadores
+    Route::get('/comparadores', function () {
+        return view('comparadores');
+    })->name('comparadores');
+
+    // API endpoints para comparadores
+    Route::get('/api/comparadores/opciones', [DashboardController::class, 'getOpcionesComparadores']);
+    Route::get('/api/comparadores/ejecutar', [DashboardController::class, 'getComparadores']);
 });

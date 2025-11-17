@@ -5,16 +5,16 @@ class FilterManager {
     }
 
     async applyFilters() {
-        console.log('🔄 Iniciando aplicación de filtros...');
+        console.log('Iniciando aplicación de filtros...');
         
         // Evitar múltiples clics
         if (this.isApplyingFilters) {
-            console.log('⏳ Filtros ya en proceso, ignorando...');
+            console.log('Filtros ya en proceso, ignorando...');
             return;
         }
        
         if (!window.chartManager) {
-            console.error('❌ chartManager no está disponible');
+            console.error('chartManager no está disponible');
             this.showError('Error: Sistema de gráficos no disponible. Recarga la página.');
             return;
         }
@@ -23,7 +23,7 @@ class FilterManager {
         this.showLoading();
         const filters = this.getCurrentFilters();
        
-        console.log('🎯 Filtros a aplicar:', filters);
+        console.log('Filtros a aplicar:', filters);
 
         try {
             const response = await fetch('/datos-filtrados', {
@@ -35,17 +35,17 @@ class FilterManager {
                 body: JSON.stringify(filters)
             });
 
-            console.log('📡 Respuesta del servidor:', response.status);
+            console.log('Respuesta del servidor:', response.status);
 
             if (!response.ok) {
                 throw new Error(`Error HTTP: ${response.status}`);
             }
 
             const data = await response.json();
-            console.log('📊 Datos recibidos:', data);
+            console.log('Datos recibidos:', data);
            
             if (data.success) {
-                console.log('✅ Filtros aplicados exitosamente');
+                console.log('Filtros aplicados exitosamente');
                
                 // ACTUALIZAR GRÁFICOS
                 this.updateChartsWithFilteredData(data.graficos);
@@ -54,16 +54,16 @@ class FilterManager {
                 this.updateKPIsWithFilteredData(data.metrics);
                
                 // ACTUALIZAR EL MAPA CON FILTROS
-                console.log('🗺️ Actualizando mapa Leaflet con filtros...');
+                console.log('Actualizando mapa Leaflet con filtros...');
                 await this.loadLeafletMapDataFiltrado(filters);
                
                 this.showFilterResults(data.total);
             } else {
-                console.error('❌ Error en respuesta:', data.message);
+                console.error('Error en respuesta:', data.message);
                 this.showError(data.message || 'Error desconocido al aplicar filtros');
             }
         } catch (error) {
-            console.error('💥 Error applying filters:', error);
+            console.error('Error applying filters:', error);
             this.showError('Error de conexión al aplicar filtros: ' + error.message);
         } finally {
             this.hideLoading();
@@ -129,7 +129,7 @@ class FilterManager {
         }
     }
 
-    // MÉTODO: Actualizar KPIs
+    // Actualizar KPIs
     updateKPIsWithFilteredData(metrics) {
         if (!metrics) return;
 
@@ -152,9 +152,9 @@ class FilterManager {
     // Cargar mapa Leaflet con filtros
     async loadLeafletMapDataFiltrado(filters) {
         try {
-            console.log('🗺️ Cargando mapa Leaflet con filtros:', filters);
+            console.log('Cargando mapa Leaflet con filtros:', filters);
             
-            // MOSTRAR loading del mapa de manera segura
+            // MOSTRAR loading del mapa
             this.showMapLoadingSafe();
             
             const response = await fetch('/map-data-filtrado', {
@@ -171,26 +171,26 @@ class FilterManager {
             }
             
             const data = await response.json();
-            console.log('🗺️ Datos del mapa filtrado recibidos:', data);
+            console.log('Datos del mapa filtrado recibidos:', data);
            
             if (data.success) {
                 this.updateLeafletMapWithFilteredData(data.data);
             } else {
-                console.error('❌ Error cargando mapa filtrado:', data.message);
+                console.error('Error cargando mapa filtrado:', data.message);
                 this.showMapError('Error al cargar datos filtrados: ' + data.message);
             }
         } catch (error) {
-            console.error('💥 Error loading filtered map data:', error);
+            console.error('Error loading filtered map data:', error);
             this.showMapError('Error de conexión al cargar mapa filtrado');
         }
     }
 
     // Actualizar mapa Leaflet con datos filtrados
     updateLeafletMapWithFilteredData(mapData) {
-        console.log('🔄 Actualizando mapa con datos filtrados...');
+        console.log('Actualizando mapa con datos filtrados...');
         
         if (!window.leafletMap) {
-            console.error('❌ Mapa Leaflet no está inicializado');
+            console.error('Mapa Leaflet no está inicializado');
             this.showMapError('El mapa no está disponible');
             return;
         }
@@ -204,10 +204,10 @@ class FilterManager {
             return;
         }
        
-        console.log(`🗺️ Procesando ${mapData.length} ubicaciones filtradas`);
+        console.log(`Procesando ${mapData.length} ubicaciones filtradas`);
        
         const maxAccidents = Math.max(...mapData.map(item => item.total || 0));
-        console.log(`📊 Máximo de accidentes (filtrado): ${maxAccidents}`);
+        console.log(`Máximo de accidentes (filtrado): ${maxAccidents}`);
        
         let circlesAdded = 0;
         
@@ -278,19 +278,19 @@ class FilterManager {
             }
         });
         
-        console.log(`✅ ${circlesAdded} círculos filtrados agregados al mapa`);
+        console.log(`${circlesAdded} círculos filtrados agregados al mapa`);
        
         // Ajustar el zoom para mostrar todos los círculos
         if (window.mapCircles.length > 0) {
             try {
                 const group = new L.featureGroup(window.mapCircles);
                 window.leafletMap.fitBounds(group.getBounds().pad(0.1));
-                console.log('🎯 Vista del mapa ajustada para datos filtrados');
+                console.log('Vista del mapa ajustada para datos filtrados');
                 
                 // OCULTAR LOADING
                 setTimeout(() => {
                     this.hideMapLoading();
-                    window.leafletMap.invalidateSize(); // Forzar redimensionamiento
+                    window.leafletMap.invalidateSize(); 
                 }, 100);
                 
             } catch (error) {
@@ -303,7 +303,7 @@ class FilterManager {
         }
     }
 
-    // Mostrar loading del mapa de manera segura
+    // Mostrar loading del mapa 
     showMapLoadingSafe() {
         const mapContainer = document.getElementById('leaflet-map');
         if (mapContainer && window.leafletMap) {
@@ -345,7 +345,7 @@ class FilterManager {
             const loadingOverlay = mapContainer.querySelector('.map-loading-overlay');
             if (loadingOverlay) {
                 loadingOverlay.remove();
-                console.log('✅ Loading del mapa ocultado (filtros)');
+                console.log('Loading del mapa ocultado (filtros)');
             }
         }
     }
@@ -485,14 +485,59 @@ class FilterManager {
         });
     }
 
-    clearFilters() {
-        const form = document.getElementById('filtros-form');
-        if (form) {
-            form.reset();
-        }
-       
-        this.reloadDefaultData();
+    async reloadAllData() {
+    showLoading();
+    try {
+        // Recargar KPIs
+        await loadDashboardData();
+        
+        // Recargar gráficos
+        await loadCharts();
+        
+        // Recargar mapa desde cero
+        await reloadMap();
+        
+        console.log('Todos los datos recargados correctamente');
+    } catch (error) {
+        console.error('Error recargando datos:', error);
+        showError('Error al recargar datos: ' + error.message);
+    } finally {
+        hideLoading();
     }
+}
+
+async reloadMap() {
+    console.log('Recargando mapa...');
+    
+    // Destruir mapa existente
+    if (window.leafletMap) {
+        window.leafletMap.remove();
+        window.leafletMap = null;
+        window.mapCircles = [];
+    }
+    
+    // Limpiar contenedor
+    const mapContainer = document.getElementById('leaflet-map');
+    if (mapContainer) {
+        mapContainer.innerHTML = '';
+    }
+    
+    // Recrear mapa
+    await initLeafletMap();
+}
+
+async clearFilters() {
+    console.log('Limpiando filtros y recargando datos...');
+    
+    // Limpiar formulario
+    const form = document.getElementById('filtros-form');
+    if (form) {
+        form.reset();
+    }
+    
+    // Recargar datos completos
+    await reloadAllData();
+}
 
     async reloadDefaultData() {
         this.showLoading();

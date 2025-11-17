@@ -15,18 +15,16 @@ class AnalistaController extends Controller
     public function dashboard()
     {
         try {
-            // Obtener métricas para analistas
-            $metrics = DB::connection('oracle')
-                ->table('HECHOS_T')
-                ->selectRaw('
-                    COUNT(*) as total_accidentes,
-                    AVG(SEVERITY) as severidad_promedio,
-                    SUM(CASE WHEN dc.WEATHER_CONDITION LIKE \'%Rain%\' OR dc.WEATHER_CONDITION LIKE \'%Snow%\' OR dc.WEATHER_CONDITION LIKE \'%Fog%\' THEN 1 ELSE 0 END) as accidentes_clima,
-                    SUM(CASE WHEN dt.HORA_INICIO_KEY >= 18 OR dt.HORA_INICIO_KEY < 6 THEN 1 ELSE 0 END) as accidentes_nocturnos
-                ')
-                ->leftJoin('DIM_CLIMA as dc', 'HECHOS_T.CLIMA_KEY', '=', 'dc.CLIMA_KEY')
-                ->leftJoin('DIM_TIEMPO_ESTADO as dt', 'HECHOS_T.TIEMPO_KEY', '=', 'dt.TIEMPO_KEY')
-                ->first();
+        $metrics = DB::connection('oracle')
+            ->table('HECHOS_T')
+            ->selectRaw('
+                COUNT(*) as total_accidentes,
+                AVG(SEVERITY) as severidad_promedio,
+                SUM(CASE WHEN dt.HORA_INICIO_KEY BETWEEN 18 AND 23 OR dt.HORA_INICIO_KEY BETWEEN 0 AND 5 THEN 1 ELSE 0 END) as accidentes_nocturnos,
+                SUM(CASE WHEN HECHOS_T.SEVERITY >= 3 THEN 1 ELSE 0 END) as accidentes_graves
+            ')
+            ->leftJoin('DIM_TIEMPO_ESTADO as dt', 'HECHOS_T.TIEMPO_KEY', '=', 'dt.TIEMPO_KEY')
+            ->first();
 
             $topEstados = DB::connection('oracle')
                 ->table('HECHOS_T')
@@ -42,37 +40,36 @@ class AnalistaController extends Controller
                 ->limit(5)
                 ->get();
 
-            return view('dashboard.base', [
-                'dashboardTitle' => 'Dashboard de Analista',
-                'dashboardSubtitle' => 'Análisis avanzado de datos de accidentes viales',
-                'roleBadgeColor' => 'success',
-                'kpis' => [
-                    [
-                        'icon' => 'fas fa-car-crash',
-                        'value' => number_format($metrics->total_accidentes ?? 0),
-                        'label' => 'Total de Accidentes',
-                        'dataKpi' => 'total-accidentes', // NUEVO
-                        'trend' => 'Live'
-                    ],
-                    [
-                        'icon' => 'fas fa-exclamation-triangle',
-                        'value' => round($metrics->severidad_promedio ?? 0, 1),
-                        'label' => 'Severidad Promedio',
-                        'dataKpi' => 'severidad-promedio' // NUEVO
-                    ],
-                    [
-                        'icon' => 'fas fa-cloud-rain',
-                        'value' => number_format($metrics->accidentes_clima ?? 0),
-                        'label' => 'Con Mal Clima',
-                        'dataKpi' => 'con-mal-clima' // NUEVO
-                    ],
-                    [
-                        'icon' => 'fas fa-moon',
-                        'value' => number_format($metrics->accidentes_nocturnos ?? 0),
-                        'label' => 'Accidentes Nocturnos',
-                        'dataKpi' => 'accidentes-nocturnos' // NUEVO
-                    ]
+             return view('dashboard.base', [
+            'dashboardTitle' => 'Dashboard de Analista',
+            'dashboardSubtitle' => 'Análisis avanzado de datos de accidentes viales',
+            'roleBadgeColor' => 'success',
+            'kpis' => [
+                [
+                    'icon' => 'fas fa-car-crash',
+                    'value' => number_format($metrics->total_accidentes ?? 0),
+                    'label' => 'Total de Accidentes',
+                    'dataKpi' => 'total-accidentes',
+                    'trend' => 'Live'
                 ],
+                [
+                    'icon' => 'fas fa-exclamation-triangle',
+                    'value' => round($metrics->severidad_promedio ?? 0, 1),
+                    'label' => 'Severidad Promedio',
+                    'dataKpi' => 'severidad-promedio'
+                ],
+                [
+                    'icon' => 'fas fa-moon',
+                    'value' => number_format($metrics->accidentes_nocturnos ?? 0),
+                    'label' => 'Accidentes Nocturnos',
+                    'dataKpi' => 'accidentes-nocturnos'
+                ],
+                [
+                        'icon' => 'fas fa-calendar',
+                        'value' => '2016-2023',
+                        'label' => 'Período'
+                    ]
+            ],
                 'quickActions' => [
                     [
                         'icon' => 'fas fa-database',

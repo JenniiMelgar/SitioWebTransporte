@@ -42,13 +42,17 @@
                         </a>
                     </li>   
                     
-                    <!-- ETL y Carga para Analistas y Administradores -->
+                    <!-- ETL para Analistas y Administradores -->
                     @if(in_array(auth()->user()->rol, ['Analista', 'Administrador']))
                     <li class="nav-item">
                         <a class="nav-link {{ request()->is('etl*') ? 'active' : '' }}" href="/etl">
                             <i class="fas fa-database me-1"></i>Procesos ETL
                         </a>
                     </li>
+                    @endif
+
+                    <!-- Carga para Administradores -->
+                    @if(in_array(auth()->user()->rol, ['Administrador']))
                     <li class="nav-item">
                         <a class="nav-link {{ request()->is('carga*') ? 'active' : '' }}" href="/carga">
                             <i class="fas fa-file-upload me-1"></i>Carga de Archivos
@@ -61,6 +65,15 @@
                     <li class="nav-item">
                         <a class="nav-link {{ request()->is('reportes*') ? 'active' : '' }}" href="/reportes">
                             <i class="fas fa-chart-pie me-1"></i>Reportes
+                        </a>
+                    </li>
+                    @endif
+
+                    <!-- Comparadores para Analistas y Administradores -->
+                    @if(in_array(auth()->user()->rol, ['Analista', 'Administrador']))
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->is('comparadores*') ? 'active' : '' }}" href="/comparadores">
+                            <i class="fas fa-balance-scale me-1"></i>Comparadores
                         </a>
                     </li>
                     @endif
