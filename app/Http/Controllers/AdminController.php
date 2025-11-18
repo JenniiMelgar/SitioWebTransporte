@@ -39,7 +39,6 @@ class AdminController extends Controller
                         'icon' => 'fas fa-car-crash',
                         'value' => number_format($metric->total_accidentes ?? 0),
                         'label' => 'Total Accidentes',
-                        'bgClass' => 'bg-success',
                         'textClass' => 'text-white',
                         'trend' => 'Live'
                     ],
@@ -47,29 +46,25 @@ class AdminController extends Controller
                         'icon' => 'fas fa-exclamation-triangle',
                         'value' => round($metric->severidad_promedio ?? 0, 1),
                         'label' => 'Severidad Promedio',
-                        'bgClass' => 'bg-info',
                         'textClass' => 'text-white'
                     ],
                     [
                         'icon' => 'fas fa-users',
                         'value' => number_format($metric->total_usuarios ?? 0),
                         'label' => 'Usuarios Registrados',
-                        'bgClass' => 'bg-primary',
                         'textClass' => 'text-white'
                     ],
                     [
-                        'icon' => 'fas fa-database',
-                        'value' => $recentLogs->count(),
-                        'label' => 'Procesos ETL',
-                        'bgClass' => 'bg-warning',
-                        'textClass' => 'text-dark'
+                        'icon' => 'fas fa-calendar',
+                        'value' => '2016-2023',
+                        'label' => 'Período'
                     ]
                 ],
                 'quickActions' => [
                     [
                         'icon' => 'fas fa-users-cog',
-                        'title' => 'Gestión Usuarios',
-                        'description' => 'Administrar usuarios del sistema',
+                        'title' => 'Usuarios',
+                        'description' => 'Usuarios del sistema',
                         'url' => '/admin/users'
                     ],
                     [
@@ -85,10 +80,10 @@ class AdminController extends Controller
                         'url' => '/carga'
                     ],
                     [
-                        'icon' => 'fas fa-chart-pie',
-                        'title' => 'Reportes',
-                        'description' => 'Generar reportes avanzados',
-                        'url' => '/reportes'
+                        'icon' => 'fas fa-balance-scale me-1',
+                        'title' => 'Comparadores',
+                        'description' => 'Compara datos',
+                        'url' => '/comparadores'
                     ]
                 ],
                 'recentLogs' => $recentLogs

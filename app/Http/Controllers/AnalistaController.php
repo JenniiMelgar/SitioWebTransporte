@@ -78,22 +78,10 @@ class AnalistaController extends Controller
                         'url' => '/etl'
                     ],
                     [
-                        'icon' => 'fas fa-chart-pie',
-                        'title' => 'Generar Reportes',
-                        'description' => 'Crear reportes personalizados',
-                        'url' => '/reportes'
-                    ],
-                    [
-                        'icon' => 'fas fa-file-export',
-                        'title' => 'Exportar Datos',
-                        'description' => 'Descargar datos en varios formatos',
-                        'url' => '/exportar'
-                    ],
-                    [
-                        'icon' => 'fas fa-chart-bar',
-                        'title' => 'Análisis Avanzado',
-                        'description' => 'Herramientas de análisis detallado',
-                        'url' => '/analisis'
+                        'icon' => 'fas fa-balance-scale me-1',
+                        'title' => 'Comparadores',
+                        'description' => 'Compara datos',
+                        'url' => '/comparadores'
                     ]
                 ],
                 'topEstados' => $topEstados,

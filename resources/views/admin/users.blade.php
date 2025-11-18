@@ -7,9 +7,9 @@
             <div class="page-header">
                 <h1 class="h3 fw-bold">
                     <i class="fas fa-users me-2 text-primary"></i>
-                    Gestión de Usuarios
+                    Usuarios
                 </h1>
-                <p class="text-muted">Administrar usuarios y permisos del sistema</p>
+                <p class="text-muted">Visualizar usuarios, para mejor control</p>
             </div>
         </div>
     </div>
@@ -28,7 +28,6 @@
                             <th>Email</th>
                             <th>Rol</th>
                             <th>Fecha Registro</th>
-                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -43,10 +42,6 @@
                                 </span>
                             </td>
                             <td>{{ $user->created_at->format('d/m/Y') }}</td>
-                            <td>
-                                <button class="btn btn-sm btn-outline-primary">Editar</button>
-                                <button class="btn btn-sm btn-outline-danger">Eliminar</button>
-                            </td>
                         </tr>
                         @endforeach
                     </tbody>

@@ -41,6 +41,15 @@
                             <i class="fas fa-chart-bar me-1"></i>Dashboard
                         </a>
                     </li>   
+
+                    <!-- Comparadores para Analistas y Administradores -->
+                    @if(in_array(auth()->user()->rol, ['Analista', 'Administrador']))
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->is('comparadores*') ? 'active' : '' }}" href="/comparadores">
+                            <i class="fas fa-balance-scale me-1"></i>Comparadores
+                        </a>
+                    </li>
+                    @endif
                     
                     <!-- ETL para Analistas y Administradores -->
                     @if(in_array(auth()->user()->rol, ['Analista', 'Administrador']))
@@ -59,24 +68,7 @@
                         </a>
                     </li>
                     @endif
-                    
-                    <!-- Reportes para Analistas y Administradores -->
-                    @if(in_array(auth()->user()->rol, ['Analista', 'Administrador']))
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->is('reportes*') ? 'active' : '' }}" href="/reportes">
-                            <i class="fas fa-chart-pie me-1"></i>Reportes
-                        </a>
-                    </li>
-                    @endif
 
-                    <!-- Comparadores para Analistas y Administradores -->
-                    @if(in_array(auth()->user()->rol, ['Analista', 'Administrador']))
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->is('comparadores*') ? 'active' : '' }}" href="/comparadores">
-                            <i class="fas fa-balance-scale me-1"></i>Comparadores
-                        </a>
-                    </li>
-                    @endif
                 @endauth
             </ul>
                 
@@ -94,8 +86,6 @@
                             </div>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="/perfil"><i class="fas fa-user me-2"></i>Mi Perfil</a></li>
-                            <li><a class="dropdown-item" href="/configuracion"><i class="fas fa-cog me-2"></i>Configuración</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
                                 <form method="POST" action="/logout">
@@ -137,9 +127,7 @@
                     <div class="footer-info">
                         <span class="text-muted">Oracle Data Warehouse</span>
                         <div class="tech-stack mt-1">
-                            <small class="badge bg-primary">Laravel</small>
                             <small class="badge bg-info">Oracle</small>
-                            <small class="badge bg-success">Bootstrap</small>
                         </div>
                     </div>
                 </div>

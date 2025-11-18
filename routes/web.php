@@ -2,11 +2,12 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\ETLController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AnalistaController;
 use App\Http\Controllers\CargaController;
+use App\Http\Controllers\ETLController;
 use App\Http\Controllers\InvitadoController;
+use App\Http\Controllers\ProcesoETLController;
 use Illuminate\Support\Facades\Route;
 
 // Página de inicio pública -> Login
@@ -29,6 +30,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/map-data', [DashboardController::class, 'getMapData'])->name('map.data');
     Route::post('/map-data-filtrado', [DashboardController::class, 'getMapDataFiltrado'])->name('map.data.filtrado');
 });
+
 
 // Rutas protegidas por autenticación
 Route::middleware(['auth'])->group(function () {
@@ -66,11 +68,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/carga/history', [CargaController::class, 'getUploadHistory'])->name('carga.history');
     });
    
-    // ETL - Solo Analistas y Administradores
-    Route::middleware(['role:Analista,Administrador'])->group(function () {
-        Route::get('/etl', [ETLController::class, 'index'])->name('etl');
-        Route::post('/etl/execute', [ETLController::class, 'executeETL'])->name('etl.execute');
-        Route::get('/etl/logs', [ETLController::class, 'getLogs'])->name('etl.logs');
+    // ETL
+    Route::middleware(['role:Analista,Administrador'])->controller(ProcesoETLController::class)->prefix('etl')->group(function () {
+        Route::get('/', 'index')->name('etl');
+        Route::post('/execute', 'executeETL')->name('etl.execute');
+        Route::get('/logs', 'getLogs')->name('etl.logs');
+        Route::get('/system-status', 'getSystemStatus')->name('etl.system-status');
+        Route::get('/batch-progress', 'getBatchProgress')->name('etl.batch-progress');
     });
    
     // API endpoints
