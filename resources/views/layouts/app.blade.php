@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <body>
+    
     <!-- Navbar Principal -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
         <div class="container">
@@ -69,10 +70,17 @@
                     </li>
                     @endif
 
+                    @if(session('2fa_enabled'))
+                        <span class="badge bg-success ms-1" title="2FA Habilitado">
+                            <i class="fas fa-shield-alt"></i>
+                        </span>
+                    @endif
+
                 @endauth
             </ul>
                 
                 <!-- Menú de Usuario -->
+                {{-- En resources/views/layouts/app.blade.php --}}
                 <ul class="navbar-nav">
                     @auth
                     <li class="nav-item dropdown">
@@ -84,13 +92,49 @@
                                 <div class="user-name">{{ auth()->user()->name }}</div>
                                 <div class="user-role badge bg-light text-primary">{{ auth()->user()->rol }}</div>
                             </div>
+                            
+                            {{-- Indicador 2FA --}}
+                            @if(session('2fa_enabled'))
+                                <span class="badge bg-success ms-1" title="2FA Habilitado">
+                                    <i class="fas fa-shield-alt"></i>
+                                </span>
+                            @else
+                                <span class="badge bg-warning ms-1" title="2FA No Configurado">
+                                    <i class="fas fa-shield-alt"></i>
+                                </span>
+                            @endif
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
+                            {{-- Opción 2FA --}}
+                            @if(session('2fa_enabled'))
+                                <li>
+                                    <a class="dropdown-item text-success" href="{{ route('2fa.recovery') }}">
+                                        <i class="fas fa-key me-2"></i>Códigos de Recuperación
+                                    </a>
+                                </li>
+                                <li>
+                                    <form method="POST" action="{{ route('2fa.disable') }}" id="disable2faForm">
+                                        @csrf
+                                        <button type="button" class="dropdown-item text-danger" onclick="confirmDisable2FA()">
+                                            <i class="fas fa-shield-slash me-2"></i>Deshabilitar 2FA
+                                        </button>
+                                    </form>
+                                </li>
+                            @else
+                                <li>
+                                    <a class="dropdown-item text-primary" href="{{ route('2fa.setup') }}">
+                                        <i class="fas fa-shield-alt me-2"></i>Configurar 2FA
+                                    </a>
+                                </li>
+                            @endif
+                            
                             <li><hr class="dropdown-divider"></li>
                             <li>
                                 <form method="POST" action="/logout">
                                     @csrf
-                                    <button type="submit" class="dropdown-item text-danger"><i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión</button>
+                                    <button type="submit" class="dropdown-item text-danger">
+                                        <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
+                                    </button>
                                 </form>
                             </li>
                         </ul>
@@ -103,6 +147,14 @@
                     </li>
                     @endauth
                 </ul>
+
+                <script>
+                function confirmDisable2FA() {
+                    if (confirm('¿Estás seguro de que quieres deshabilitar la autenticación de dos factores? Esto reduce la seguridad de tu cuenta.')) {
+                        document.getElementById('disable2faForm').submit();
+                    }
+                }
+                </script>
             </div>
         </div>
     </nav>

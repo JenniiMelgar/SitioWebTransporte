@@ -49,7 +49,6 @@ class DashboardCharts {
             }
         }
 
-        // Configuración por defecto mejorada
         const defaultOptions = {
             responsive: true,
             maintainAspectRatio: false,
@@ -263,7 +262,7 @@ class DashboardCharts {
         });
     }
 
-    // GENERADOR DE COLORES - MÉTODO QUE FALTABA
+    // GENERADOR DE COLORES 
     generateColors(count, alpha = 1) {
         const colors = [
             `rgba(54, 162, 235, ${alpha})`,
